@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juego de Preguntas - ITJEM</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .quiz-container {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .option {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .option:hover {
+      background-color: #e9ecef;
+    }
+    .score-display {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #0d6efd;
+    }
+    .correct {
+      background-color: #d4edda !important;
+    }
+    .incorrect {
+      background-color: #f8d7da !important;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+    <!-- Sección Hero integrada con Navbar -->
+    <section style="background: url('fondo1.jpg') center/cover no-repeat; min-height: 50vh; position: relative; color: white; text-shadow: 2px 2px 4px black; display: flex; flex-direction: column;">
+        <!-- Overlay oscuro -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4);"></div>
+        
+        <!-- Navbar integrado en el hero -->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: transparent !important; padding-top: 20px; padding-bottom: 20px; position: relative; z-index: 10;">
+          <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>ITJEM</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContenido">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContenido">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link active" href="pagina.html"><i class="fas fa-home me-1"></i> Inicio</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="historia.html"><i class="fas fa-book me-1"></i> ¿Quienes somos?</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="carrera.html"><i class="fas fa-graduation-cap me-1"></i> Carreras</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="formulario.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        
+        <!-- Contenido del hero -->
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; position: relative; z-index: 2; padding-bottom: 100px;">
+          
+      </section>
+
+  <!-- Contenido Principal -->
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <h1 class="text-center mb-4"><i class="fas fa-gamepad me-2"></i> Preguntas ITJEM</h1>
+        <p class="text-center mb-4">Pon a prueba tus conocimientos sobre nuestras carreras técnicas</p>
+        
+        <!-- Selección de Carrera -->
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-list-alt me-2"></i>Selecciona una Carrera</h4>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-outline-primary btn-lg carrera-btn" data-carrera="secretariado">
+                <i class="fas fa-keyboard me-2"></i>Secretariado Ejecutivo
+              </button>
+              <button class="btn btn-outline-success btn-lg carrera-btn" data-carrera="sistemas">
+                <i class="fas fa-laptop-code me-2"></i>Sistemas Informáticos
+              </button>
+              <button class="btn btn-outline-info btn-lg carrera-btn" data-carrera="analisis">
+                <i class="fas fa-database me-2"></i>Telecomunicaciones
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contenedor del Quiz -->
+        <div id="quiz-container" class="quiz-container" style="display: none;">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 id="carrera-title" class="mb-0"></h3>
+            <div class="score-display">Puntuación: <span id="score">0</span></div>
+          </div>
+          
+          <div id="question-container">
+            <!-- Las preguntas se insertarán aquí dinámicamente -->
+          </div>
+          
+          <div class="d-flex justify-content-between mt-4">
+            <button id="prev-btn" class="btn btn-secondary" disabled>
+              <i class="fas fa-arrow-left me-1"></i>Anterior
+            </button>
+            <button id="next-btn" class="btn btn-primary">
+              Siguiente<i class="fas fa-arrow-right ms-1"></i>
+            </button>
+            <button id="finish-btn" class="btn btn-success" style="display: none;">
+              <i class="fas fa-trophy me-1"></i>Ver Resultado
+            </button>
+          </div>
+        </div>
+        
+        <!-- Resultados -->
+        <div id="results-container" class="text-center mt-4" style="display: none;">
+          <div class="card">
+            <div class="card-header bg-success text-white">
+              <h4><i class="fas fa-award me-2"></i>Resultado Final</h4>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Has completado el quiz de <span id="result-carrera"></span>!</h5>
+              <p class="card-text">Tu puntuación final es: <span id="final-score" class="fw-bold fs-3">0</span>/<span id="total-questions" class="fw-bold">0</span></p>
+              <p id="result-message" class="fst-italic"></p>
+              <button id="restart-btn" class="btn btn-primary mt-3">
+                <i class="fas fa-redo me-1"></i>Jugar Otra Carrera
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Footer -->
+   <footer style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('pie.jpg') center/cover no-repeat; color: white; padding-top: 70px;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h5><i class="fas fa-university me-2"></i>ITEJM</h5>
+          <p>Formando profesionales en secretariado ejecutivo desde 1995.</p>
+        </div>
+        <div class="col-md-3 mb-3">
+          <h5>Contacto</h5>
+          <p><i class="fas fa-phone me-2"></i> (01) 123-4567</p>
+          <p><i class="fas fa-envelope me-2"></i> secretariado@itjm.edu</p>
+        </div>
+      </div>
+      <hr style="border-color: white;">
+      <div class="text-center">
+        <p class="mb-0">© 2025 Instituto Técnico Jesús María.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Script del Juego -->
+  <script>
+    // Base de datos de preguntas por carrera
+    const quizzes = {
+      secretariado: {
+        title: "Secretariado Ejecutivo",
+        questions: [
+          {
+            question: "¿Qué habilidad es fundamental para un secretario ejecutivo?",
+            options: [
+              "Redacción de documentos",
+              "Programación avanzada",
+              "Diseño gráfico",
+              "Análisis financiero"
+            ],
+            answer: 0
+          },
+          {
+            question: "¿Qué software es esencial en la formación de secretariado ejecutivo?",
+            options: [
+              "Paquete Office (Word, Excel, PowerPoint)",
+              "Photoshop e Illustrator",
+              "Lenguajes de programación",
+              "Software de ingeniería"
+            ],
+            answer: 0
+          },
+          {
+            question: "¿Cuál es el objetivo principal de un secretario ejecutivo?",
+            options: [
+              "Brindar apoyo administrativo eficiente",
+              "Desarrollar software empresarial",
+              "Diseñar páginas web",
+              "Realizar análisis de datos complejos"
+            ],
+            answer: 0
+          }
+        ]
+      },
+      sistemas: {
+        title: "Sistemas Informáticos",
+        questions: [
+          {
+            question: "¿Qué lenguaje de programación se enseña típicamente en Sistemas Informáticos?",
+            options: [
+              "Java",
+              "Inglés técnico",
+              "Derecho informático",
+              "Contabilidad"
+            ],
+            answer: 0
+          },
+          {
+            question: "¿Qué área cubre principalmente la carrera de Sistemas Informáticos?",
+            options: [
+              "Desarrollo de software",
+              "Diseño de modas",
+              "Gastronomía",
+              "Medicina"
+            ],
+            answer: 0
+          },
+          {
+            question: "¿Qué habilidad es crucial para un técnico en Sistemas Informáticos?",
+            options: [
+              "Resolución de problemas lógicos",
+              "Redacción de documentos legales",
+              "Dibujo artístico",
+              "Interpretación musical"
+            ],
+            answer: 0
+          }
+        ]
+      },
+      analisis: {
+        title: "Análisis de Sistemas",
+        questions: [
+          {
+            question: "¿Qué hace principalmente uno de telecomunicaciones?",
+            options: [
+              "Diseña y mejora sistemas informáticos",
+              "Realiza secretariado ejecutivo",
+              "Enseña matemáticas básicas",
+              "Diseña ropa deportiva"
+            ],
+            answer: 0
+          },
+          {
+            question: "¿Qué conocimiento necesita uno de telecomunicaciones?",
+            options: [
+              "Procesos empresariales y tecnología",
+              "Cocina internacional",
+              "Diseño de interiores",
+              "Mecánica automotriz"
+            ],
+            answer: 0
+          },
+          {
+            question: "¿Qué herramienta usa uno de telecomunicaciones para modelar procesos?",
+            options: [
+              "Diagramas UML",
+              "Photoshop",
+              "AutoCAD",
+              "Microsoft Publisher"
+            ],
+            answer: 0
+          }
+        ]
+      }
+    };
+
+    // Variables del juego
+    let currentQuiz = null;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOption = null;
+
+    // Elementos del DOM
+    const carreraButtons = document.querySelectorAll('.carrera-btn');
+    const quizContainer = document.getElementById('quiz-container');
+    const carreraTitle = document.getElementById('carrera-title');
+    const questionContainer = document.getElementById('question-container');
+    const scoreDisplay = document.getElementById('score');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const finishBtn = document.getElementById('finish-btn');
+    const resultsContainer = document.getElementById('results-container');
+    const resultCarrera = document.getElementById('result-carrera');
+    const finalScore = document.getElementById('final-score');
+    const totalQuestions = document.getElementById('total-questions');
+    const resultMessage = document.getElementById('result-message');
+    const restartBtn = document.getElementById('restart-btn');
+
+    // Event listeners
+    carreraButtons.forEach(button => {
+      button.addEventListener('click', () => startQuiz(button.dataset.carrera));
+    });
+
+    prevBtn.addEventListener('click', showPreviousQuestion);
+    nextBtn.addEventListener('click', showNextQuestion);
+    finishBtn.addEventListener('click', showResults);
+    restartBtn.addEventListener('click', restartQuiz);
+
+    // Funciones del juego
+    function startQuiz(carrera) {
+      currentQuiz = quizzes[carrera];
+      currentQuestionIndex = 0;
+      score = 0;
+      
+      carreraTitle.textContent = currentQuiz.title;
+      scoreDisplay.textContent = score;
+      quizContainer.style.display = 'block';
+      resultsContainer.style.display = 'none';
+      
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const question = currentQuiz.questions[currentQuestionIndex];
+      
+      let optionsHtml = '';
+      question.options.forEach((option, index) => {
+        optionsHtml += `
+          <div class="option" data-index="${index}">
+            <input type="radio" name="option" id="option-${index}" value="${index}">
+            <label for="option-${index}">${option}</label>
+          </div>
+        `;
+      });
+      
+      questionContainer.innerHTML = `
+        <div class="question">${currentQuestionIndex + 1}. ${question.question}</div>
+        <div class="options">${optionsHtml}</div>
+      `;
+      
+      // Marcar opción seleccionada si existe
+      if (selectedOption !== null) {
+        const optionElement = document.querySelector(`.option[data-index="${selectedOption}"]`);
+        if (optionElement) {
+          optionElement.querySelector('input').checked = true;
+        }
+      }
+      
+      // Actualizar estado de los botones
+      prevBtn.disabled = currentQuestionIndex === 0;
+      nextBtn.style.display = currentQuestionIndex < currentQuiz.questions.length - 1 ? 'block' : 'none';
+      finishBtn.style.display = currentQuestionIndex === currentQuiz.questions.length - 1 ? 'block' : 'none';
+      
+      // Agregar event listeners a las opciones
+      document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', selectOption);
+      });
+    }
+
+    function selectOption(e) {
+      const selectedElement = e.currentTarget;
+      const optionIndex = parseInt(selectedElement.dataset.index);
+      
+      // Desmarcar todas las opciones
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('selected', 'correct', 'incorrect');
+      });
+      
+      // Marcar la seleccionada
+      selectedElement.classList.add('selected');
+      selectedOption = optionIndex;
+      
+      // Verificar si es la respuesta correcta
+      const currentQuestion = currentQuiz.questions[currentQuestionIndex];
+      if (optionIndex === currentQuestion.answer) {
+        selectedElement.classList.add('correct');
+      } else {
+        selectedElement.classList.add('incorrect');
+        // Marcar también la correcta
+        document.querySelector(`.option[data-index="${currentQuestion.answer}"]`).classList.add('correct');
+      }
+      
+      // Actualizar puntuación si es correcta
+      if (optionIndex === currentQuestion.answer && !selectedElement.dataset.answered) {
+        score++;
+        scoreDisplay.textContent = score;
+        selectedElement.dataset.answered = 'true';
+      }
+    }
+
+    function showNextQuestion() {
+      if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+        currentQuestionIndex++;
+        selectedOption = null;
+        showQuestion();
+      }
+    }
+
+    function showPreviousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        selectedOption = null;
+        showQuestion();
+      }
+    }
+
+    function showResults() {
+      quizContainer.style.display = 'none';
+      resultsContainer.style.display = 'block';
+      
+      resultCarrera.textContent = currentQuiz.title;
+      finalScore.textContent = score;
+      totalQuestions.textContent = currentQuiz.questions.length;
+      
+      // Mensaje según el puntaje
+      const percentage = (score / currentQuiz.questions.length) * 100;
+      if (percentage >= 80) {
+        resultMessage.textContent = "¡Excelente! Demuestras gran conocimiento sobre esta carrera.";
+      } else if (percentage >= 50) {
+        resultMessage.textContent = "¡Buen trabajo! Pero aún hay cosas por aprender.";
+      } else {
+        resultMessage.textContent = "Sigue estudiando, puedes mejorar.";
+      }
+    }
+
+    function restartQuiz() {
+      resultsContainer.style.display = 'none';
+      quizContainer.style.display = 'none';
+      selectedOption = null;
+    }
+  </script>
+</body>
+</html>
